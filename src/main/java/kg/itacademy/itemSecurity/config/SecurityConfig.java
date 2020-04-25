@@ -24,9 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().and().authorizeRequests()
-                .antMatchers(HttpMethod.DELETE, "/items/delete/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/items/delete/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST,"/items/add").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/items").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.GET, "/items").hasAnyRole("USER")
                 .and().csrf().disable().headers().frameOptions().disable().and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
     }

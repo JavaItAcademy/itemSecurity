@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,6 +19,8 @@ import java.util.List;
 public class ItemController {
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Value("${it.academy.code}")
     private String code;
 
@@ -31,9 +35,8 @@ public class ItemController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addItem(@Valid @RequestBody Item item, @RequestHeader String location ) {
-        System.err.println(code);
-        if (!code.equals(location)) return ResponseEntity.ok("");
+    public ResponseEntity addItem(@Valid @RequestBody Item item) {
+        item.setName(passwordEncoder.encode(item.getName()));
         Item it = itemService.save(item);
         return new ResponseEntity(it, HttpStatus.CREATED);
     }
